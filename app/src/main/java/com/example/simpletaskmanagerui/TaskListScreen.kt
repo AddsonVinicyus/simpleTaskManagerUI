@@ -144,11 +144,11 @@ fun TaskListScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(tasks, key = { it.id }) { task ->
+                    items(tasks, key = { it.id ?: 0 }) { task ->
                         TaskCard(
                             task = task,
-                            onToggle = { onToggleTask(task.id) },
-                            onDelete = { onDeleteTask(task.id) }
+                            onToggle = { task.id?.let { onToggleTask(it) } },
+                            onDelete = { task.id?.let { onDeleteTask(it) } }
                         )
                     }
                 }

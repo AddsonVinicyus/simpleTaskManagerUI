@@ -28,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,38 +55,27 @@ import com.example.simpletaskmanagerui.viewModel.LoginViewModel
 @Composable
 fun SimpleTaskManagerLoginApp(
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = viewModel()
+    viewModel: LoginViewModel = viewModel(),
+    onNavigateToTasks: (String) -> Unit
 ){
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(uiState) {
+        if(uiState is LoginUiState.Sucess){
+            val token = (uiState as LoginUiState.Sucess).token
+            onNavigateToTasks(token)
+            viewModel.resetState()
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFFF9FAFB)
     ){
-        when(val state = uiState){
-            is LoginUiState.Sucess -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Logado com Sucesso!",
-                            fontSize = 24.sp,
-                            color = Color(0xFF10B981),
-                            fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = {viewModel.resetState()}) {
-                            Text("Voltar ao Login")
-                        }
-                    }
-                }
-            }
-            else -> {
-                LoginScreen(
-                    uiState = state,
-                    onLoginClick = { user, pass -> viewModel.login(user, pass)}
-                )
-            }
-        }
+        LoginScreen(
+            uiState = uiState,
+            onLoginClick = { user, pass -> viewModel.login(user, pass)}
+        )
     }
 }
 
@@ -176,6 +166,18 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // CORREÇÃO: Adicionado o bloco para renderizar a mensagem de erro na interface
+        if (uiState is LoginUiState.Error) {
+            Text(
+                text = (uiState as LoginUiState.Error).message,
+                color = Color(0xFFEF4444),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+
         Button(
             onClick = {
                 focusManager.clearFocus()
@@ -206,4 +208,3 @@ fun LoginScreen(
     }
 
 }
-
