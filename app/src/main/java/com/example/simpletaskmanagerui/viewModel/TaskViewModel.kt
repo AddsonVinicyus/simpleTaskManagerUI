@@ -43,7 +43,7 @@ class TaskViewModel: ViewModel() {
                     title = title,
                     description = description,
                     completed = false,
-                    createdAt = LocalDateTime.now().toString(),
+                    createdAt = null,
                     completedAt = null
                 )
                 val response = RetrofitClient.instance.addTask(token, newTask)

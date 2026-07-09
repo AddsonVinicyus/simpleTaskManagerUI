@@ -24,6 +24,9 @@ interface TaskApiService {
     @POST("/login")
     suspend fun login(@Body request: LoginRequest): Response<String>
 
+    @POST("/register")
+    suspend fun register(@Body request: LoginRequest): Response<Unit>
+
     @GET("/tasks")
     suspend fun getTasks(@Header("Authorization") token: String): Response<List<Task>>
 

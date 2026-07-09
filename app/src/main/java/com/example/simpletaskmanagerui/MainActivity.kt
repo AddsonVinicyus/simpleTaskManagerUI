@@ -1,11 +1,9 @@
 package com.example.simpletaskmanagerui
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,20 +14,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.simpletaskmanagerui.model.Task
 import com.example.simpletaskmanagerui.ui.theme.SimpleTaskManagerUITheme
-import com.example.simpletaskmanagerui.viewModel.LoginUiState
+import com.example.simpletaskmanagerui.view.RegisterManager
+import com.example.simpletaskmanagerui.view.RegisterScreen
+import com.example.simpletaskmanagerui.view.SimpleTaskManagerApp
+import com.example.simpletaskmanagerui.view.TaskListScreen
 import com.example.simpletaskmanagerui.viewModel.TaskUiState
 import com.example.simpletaskmanagerui.viewModel.TaskViewModel
 
@@ -62,10 +58,25 @@ fun AppNavigation(
 
     NavHost(navController = navController, startDestination = "login", modifier = modifier){
         composable("login"){
-            SimpleTaskManagerLoginApp(
+            SimpleTaskManagerApp(
                 onNavigateToTasks = { token ->
                     navController.navigate("tasks/$token") {
                         popUpTo("login") { inclusive = true }
+                    }
+                },
+                onNavigateToRegister = {
+                    navController.navigate("register") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable("register"){
+            RegisterManager(
+                onNavigateToLogin = {
+                    navController.navigate("login") {
+                        popUpTo("register") { inclusive = true }
                     }
                 }
             )
@@ -96,7 +107,7 @@ fun AppNavigation(
                         tasks = state.tasks,
                         onLogoutClick = {
                             navController.navigate("login") {
-                                popUpTo("tasks/{token}"){ inclusive = true }
+                                popUpTo("tasks/{token}") { inclusive = true }
                             }
                         },
                         onAddTask = { title, description ->
