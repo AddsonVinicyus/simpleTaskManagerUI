@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 class RegisterViewModel: ViewModel() {
 
@@ -36,7 +37,9 @@ class RegisterViewModel: ViewModel() {
                 if(response.isSuccessful){
                     _uiState.value = RegisterUiState.Success("Usuário cadastrado com sucesso!")
                 } else {
-                    _uiState.value = RegisterUiState.Error("Erro ao registrar usuário.")
+                    val jsonObject = JSONObject(response.errorBody()!!.string())
+
+                    _uiState.value = RegisterUiState.Error(jsonObject.getString("message"))
                 }
             } catch (e: Exception){
                     Log.e("API_DEBUG", "Erro ao tentar registrar usuário", e)
