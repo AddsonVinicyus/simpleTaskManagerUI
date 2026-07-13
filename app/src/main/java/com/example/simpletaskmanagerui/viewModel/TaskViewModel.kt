@@ -56,11 +56,11 @@ class TaskViewModel: ViewModel() {
         }
     }
 
-    fun toggleTask(token: String, task: Task){
+    fun toggleTask(token: String, task: Task, id: Int){
         viewModelScope.launch {
             try {
                 val updatedTask = task.copy(completed = !task.completed)
-                val response = RetrofitClient.instance.updateTask(token, updatedTask)
+                val response = RetrofitClient.instance.updateTask(token, updatedTask, id)
                 if(response.isSuccessful){
                     fetchTasks(token)
                 }

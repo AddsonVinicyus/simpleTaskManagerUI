@@ -23,7 +23,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.simpletaskmanagerui.ui.theme.SimpleTaskManagerUITheme
 import com.example.simpletaskmanagerui.view.RegisterManager
-import com.example.simpletaskmanagerui.view.RegisterScreen
 import com.example.simpletaskmanagerui.view.SimpleTaskManagerApp
 import com.example.simpletaskmanagerui.view.TaskListScreen
 import com.example.simpletaskmanagerui.viewModel.TaskUiState
@@ -115,7 +114,7 @@ fun AppNavigation(
                         },
                         onToggleTask = { taskId ->
                             val taskToToggle = state.tasks.find { it.id == taskId }
-                            taskToToggle?.let { taskViewModel.toggleTask(token, it) }
+                            taskToToggle?.let { taskViewModel.toggleTask(token, it, taskId) }
                         },
                         onDeleteTask = { taskId ->
                             taskViewModel.deleteTask(token, taskId)

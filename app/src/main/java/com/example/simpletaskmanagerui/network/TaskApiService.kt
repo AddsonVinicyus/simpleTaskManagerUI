@@ -34,10 +34,10 @@ interface TaskApiService {
     suspend fun addTask(@Header("Authorization") token: String, @Body task: Task
     ): Response<Unit>
 
-    @PUT("/tasks")
+    @PUT("/tasks/{id}")
     suspend fun updateTask(
         @Header("Authorization") token: String,
-        @Body task: Task
+        @Body task: Task, @Path("id") id: Int
     ): Response<Unit>
 
     @DELETE("/tasks/{id}")
